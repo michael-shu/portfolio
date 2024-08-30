@@ -35,13 +35,50 @@
 		// Hack: Activate non-input submits.
 			$('form').on('click', '.submit', function(event) {
 
-				// Stop propagation, default.
-					event.stopPropagation();
-					event.preventDefault();
+				event.stopPropagation();
+    			event.preventDefault();
 
-				// Submit form.
-					$(this).parents('form').submit();
+    			console.log("Simulating form submission...");
 
+    			// Gather form data
+    			var formData = {
+        			name: $('#name').val(),
+        			email: $('#email').val(),
+        			message: $('#message').val()
+    			};
+
+				// Clear the input fields
+				$('form').find('input[type="text"], textarea').val('');
+
+    			// Send form data via AJAX
+    			$.ajax({
+        			url: "https://formsubmit.co/ajax/michaelshu34@gmail.com", // Your email here
+        			method: "POST",
+        			data: formData,
+        			dataType: "json",
+        			success: function(response) {
+
+						// Display the modal
+						$('#successModal').css('display', 'block');
+
+            			// Close the modal when the user clicks on <span> (x)
+            			$('#successModal .close').on('click', function() {
+                			$('#successModal').css('display', 'none');
+            			});
+
+            			// Close the modal when the user clicks anywhere outside of the modal
+            			$(window).on('click', function(event) {
+                			if ($(event.target).is('#successModal')) {
+                    			$('#successModal').css('display', 'none');
+                			}
+            			});
+        			},
+        			error: function(error) {
+            			console.error("There was an error submitting the form:", error);
+            			alert("There was an error submitting the form. Please try again.");
+        			}
+
+			});
 			});
 
 	// Sidebar.
